@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planilha de Comissões Brave - Resultados Destacados</title>
+    <style>
+        :root {
+            --azul-escuro: #2b2d42;
+            --azul-escuro-2: #0f1c2f;
+            --cinza-azulado: #8d99ae;
+            --cinza-azulado-2: #505168;
+            --amarelo: #eaca2d;
+            --amarelo-2: #d59f07;
+            --cinza-claro: #edf2f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Red Hat Display', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--cinza-claro);
+            color: var(--azul-escuro);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: var(--azul-escuro);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            position: relative;
+        }
+
+        .logo-square {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--amarelo);
+            transform: rotate(45deg);
+        }
+
+        .logo-square-inner {
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            border: 3px solid var(--amarelo);
+            transform: rotate(45deg);
+            top: 20%;
+            left: 20%;
+        }
+
+        .logo-square-center {
+            position: absolute;
+            width: 20%;
+            height: 20%;
+            background-color: var(--amarelo);
+            transform: rotate(45deg);
+            top: 40%;
+            left: 40%;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .month-nav {
+            display: flex;
+            overflow-x: auto;
+            background-color: white;
+            padding: 0 10px;
+        }
+
+        .month-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            position: relative;
+            transition: all 0.3s ease;
+            color: var(--azul-escuro);
+        }
+
+        .month-tab.active {
+            border-bottom-color: var(--amarelo);
+            color: var(--azul-escuro);
+            font-weight: 600;
+        }
+
+        .month-tab:hover {
+            background-color: var(--cinza-claro);
+        }
+
+        .month-tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--amarelo);
+        }
+
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .section-title {
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: var(--azul-escuro);
+            color: white;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "";
+            display: inline-block;
+            width: 5px;
+            height: 20px;
+            background-color: var(--amarelo);
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background-color: var(--cinza-claro);
+            color: var(--azul-escuro);
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: var(--cinza-claro) !important;
+        }
+
+        .month-info {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .month-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            color: var(--azul-escuro);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--amarelo);
+            color: var(--azul-escuro);
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--amarelo-2);
+        }
+
+        /* Navegação de meses melhorada e otimizada */
+        .months-nav-improved {
+            display: flex;
+            overflow-x: auto;
+            margin: 0 0 20px;
+            padding: 8px 5px;
+            gap: 2px;
+            scrollbar-width: thin;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .month-pill {
+            padding: 8px 10px;
+            background-color: var(--cinza-claro);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-align: center;
+            flex: 1;
+            min-width: 70px;
+            max-width: calc(100% / 12 - 4px);
+            position: relative;
+            font-size: 14px;
+        }
+
+        /* Delimitador entre meses */
+        .month-pill:not(:last-child)::after {
+            content: "|";
+            position: absolute;
+            right: -3px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cinza-azulado);
+            opacity: 0.5;
+            font-weight: 300;
+            z-index: 1;
+        }
+
+        .month-pill.active {
+            background-color: var(--amarelo);
+            color: var(--azul-escuro-2);
+            font-weight: 600;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .month-pill:hover:not(.active) {
+            background-color: var(--cinza-azulado);
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: var(--azul-escuro);
+            color: white;
+            margin-left: 10px;
+        }
+
+        .btn-edit:hover {
+            background-color: var(--azul-escuro-2);
+        }
+
+        .btn-save {
+            background-color: #4CAF50;
+            color: white;
+            display: none;
+        }
+
+        .btn-save:hover {
+            background-color: #388E3C;
+        }
+
+        .btn-cancel {
+            background-color: #f44336;
+            color: white;
+            display: none;
+            margin-right: 10px;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d32f2f;
+        }
+
+        .results-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .results-table th {
+            background-color: var(--cinza-claro);
+            color: var(--azul-escuro);
+            padding: 10px;
+            text-align: center;
+        }
+
+        .results-table td {
+            padding: 8px 10px;
+            text-align: center;
+        }
+
+        .results-table .total-row td {
+            font-weight: bold;
+            background-color: var(--cinza-claro);
+        }
+
+        .editable input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .editable input:focus {
+            border-color: var(--amarelo);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(234, 202, 45, 0.2);
+        }
+
+        .notice {
+            background-color: #fff3cd;
+            border-left: 5px solid var(--amarelo);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: var(--azul-escuro);
+        }
+
+        .meta-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--amarelo);
+        }
+
+        .meta-card h3 {
+            color: var(--azul-escuro);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .meta-item {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .meta-emoji {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .meta-description {
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .meta-value {
+            font-weight: 400;
+        }
+
+        /* Estilos ajustados para os resultados e correção da palavra "ATUAL" */
+        .results-container {
+            margin: 20px 0 30px;
+            position: relative;
+            border: 2px solid var(--amarelo);
+            border-radius: 8px;
+            overflow: visible; /* Alterado para visible para não cortar o badge */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: scale(1.02);
+        }
+
+        .results-header {
+            background-color: var(--azul-escuro);
+            color: white;
+            padding: 12px 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .results-header:before {
+            content: "📊";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .results-content {
+            padding: 5px;
+            background-color: white;
+        }
+
+        .results-actual-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        .results-actual-table th {
+            background-color: var(--azul-escuro);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .results-actual-table td {
+            padding: 12px 15px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--azul-escuro);
+        }
+
+        .results-actual-table .total-row {
+            background-color: var(--cinza-claro);
+        }
+
+        .results-actual-table .total-row td {
+            font-weight: 700;
+            font-size: 16px;
+            background-color: #e6f2ff;
+            color: var(--azul-escuro);
+            padding: 15px;
+            border-top: 2px solid var(--cinza-azulado);
+        }
+
+        /* Correção para o badge "ATUAL" - versão melhorada */
+        .results-badge {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background-color: var(--amarelo);
+            color: var(--azul-escuro);
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            transform: rotate(5deg);
+            z-index: 100;
+            font-size: 15px;
+            width: auto;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .metas-table {
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .divider {
+            margin: 30px 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--cinza-azulado), transparent);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .month-pill {
+                min-width: 100px;
+                padding: 8px 15px;
+            }
+            
+            .month-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="logo-square"></div>
+                    <div class="logo-square-inner"></div>
+                    <div class="logo-square-center"></div>
+                </div>
+                <h1>BRAVE</h1>
+            </div>
+            <div>
+                <span style="color: var(--cinza-claro); opacity: 0.8;">Comissões da Equipe</span>
+            </div>
+        </header>
+        
+        <!-- Navegação de meses corrigida com delimitadores -->
+        <div class="months-nav-improved">
+            <div class="month-pill" data-month="janeiro">Janeiro</div>
+            <div class="month-pill" data-month="fevereiro">Fevereiro</div>
+            <div class="month-pill active" data-month="marco">Março</div>
+            <div class="month-pill" data-month="abril">Abril</div>
+            <div class="month-pill" data-month="maio">Maio</div>
+            <div class="month-pill" data-month="junho">Junho</div>
+            <div class="month-pill" data-month="julho">Julho</div>
+            <div class="month-pill" data-month="agosto">Agosto</div>
+            <div class="month-pill" data-month="setembro">Setembro</div>
+            <div class="month-pill" data-month="outubro">Outubro</div>
+            <div class="month-pill" data-month="novembro">Novembro</div>
+            <div class="month-pill" data-month="dezembro">Dezembro</div>
+        </div>
+
+        <div class="content">
+            <div class="month-info">
+                <h2 class="month-name">Comissões de Março/2025</h2>
+                <div>
+                    <button id="btn-edit" class="btn btn-edit">Editar Geral</button>
+                    <button id="btn-cancel" class="btn btn-cancel">Cancelar</button>
+                    <button id="btn-save" class="btn btn-save">Salvar Alterações</button>
+                </div>
+            </div>
+            
+            <div id="edit-notice" class="notice" style="display: none;">
+                <strong>Modo de edição ativado.</strong> Clique nos valores para editar. Pressione "Salvar Alterações" quando terminar.
+            </div>
+            
+            <!-- Conteúdo Março (único com dados reais) -->
+            <div id="content-marco" class="month-content active">
+                <h2 class="section-title">Comissão Time Marketing</h2>
+                <table class="table-marketing">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Valor Total (R$)</th>
+                            <th>1ª Parcela - Dia 15 (R$)</th>
+                            <th>2ª Parcela - Dia 30 (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nayra</td>
+                            <td class="val-total" data-value="500.00">R$ 500,00</td>
+                            <td class="val-first" data-value="250.00">R$ 250,00</td>
+                            <td class="val-second" data-value="250.00">R$ 250,00</td>
+                        </tr>
+                        <tr>
+                            <td>Victor</td>
+                            <td class="val-total" data-value="300.00">R$ 300,00</td>
+                            <td class="val-first" data-value="150.00">R$ 150,00</td>
+                            <td class="val-second" data-value="150.00">R$ 150,00</td>
+                        </tr>
+                        <tr>
+                            <td>Ana Karla</td>
+                            <td class="val-total" data-value="300.00">R$ 300,00</td>
+                            <td class="val-first" data-value="150.00">R$ 150,00</td>
+                            <td class="val-second" data-value="150.00">R$ 150,00</td>
+                        </tr>
+                        <tr>
+                            <td>Gabriel</td>
+                            <td class="val-total" data-value="300.00">R$ 300,00</td>
+                            <td class="val-first" data-value="150.00">R$ 150,00</td>
+                            <td class="val-second" data-value="150.00">R$ 150,00</td>
+                        </tr>
+                        <tr>
+                            <td>Edna</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>TOTAL MARKETING</td>
+                            <td class="team-total">R$ 1.400,00</td>
+                            <td class="team-total-first">R$ 700,00</td>
+                            <td class="team-total-second">R$ 700,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2 class="section-title">Comissão Time Performance</h2>
+                <table class="table-performance">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Valor Total (R$)</th>
+                            <th>1ª Parcela - Dia 15 (R$)</th>
+                            <th>2ª Parcela - Dia 30 (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cleiton</td>
+                            <td class="val-total" data-value="2500.00">R$ 2.500,00</td>
+                            <td class="val-first" data-value="1250.00">R$ 1.250,00</td>
+                            <td class="val-second" data-value="1250.00">R$ 1.250,00</td>
+                        </tr>
+                        <tr>
+                            <td>Chianca</td>
+                            <td class="val-total" data-value="300.00">R$ 300,00</td>
+                            <td class="val-first" data-value="150.00">R$ 150,00</td>
+                            <td class="val-second" data-value="150.00">R$ 150,00</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>TOTAL PERFORMANCE</td>
+                            <td class="team-total">R$ 2.800,00</td>
+                            <td class="team-total-first">R$ 1.400,00</td>
+                            <td class="team-total-second">R$ 1.400,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table>
+                    <tbody>
+                        <tr class="total-row">
+                            <td style="width: 25%">TOTAL GERAL</td>
+                            <td style="width: 25%" class="grand-total">R$ 4.200,00</td>
+                            <td style="width: 25%" class="grand-total-first">R$ 2.100,00</td>
+                            <td style="width: 25%" class="grand-total-second">R$ 2.100,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2 class="section-title">Metas e Resultados</h2>
+                
+                <!-- MARKETING - Metas e Resultados -->
+                <div class="meta-card">
+                    <h3>🏆 METAS COLETIVAS - TIME DE MARKETING</h3>
+                    <div class="meta-item">
+                        <span class="meta-emoji">✅</span>
+                        <span class="meta-description">Meta Ideal:</span>
+                        <span class="meta-value">200 MQL/mês</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-emoji">🔥</span>
+                        <span class="meta-description">Meta Ótima:</span>
+                        <span class="meta-value">250 MQL/mês</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-emoji">🚀</span>
+                        <span class="meta-description">Meta Excelente:</span>
+                        <span class="meta-value">300 MQL/mês (desafio máximo!)</span>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px; color: var(--azul-escuro);">Distribuição dos Leads por Faixa de Faturamento - Marketing</h3>
+                <table class="results-table metas-table">
+                    <thead>
+                        <tr>
+                            <th>Faixa de Faturamento</th>
+                            <th>Meta Ideal (200)</th>
+                            <th>Meta Ótima (250)</th>
+                            <th>Meta Excelente (300)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>51k a 100k</td>
+                            <td>80</td>
+                            <td>100</td>
+                            <td>120</td>
+                        </tr>
+                        <tr>
+                            <td>101k a 300k</td>
+                            <td>50</td>
+                            <td>65</td>
+                            <td>80</td>
+                        </tr>
+                        <tr>
+                            <td>301k a 500k</td>
+                            <td>30</td>
+                            <td>40</td>
+                            <td>50</td>
+                        </tr>
+                        <tr>
+                            <td>501k a 1 milhão</td>
+                            <td>25</td>
+                            <td>30</td>
+                            <td>40</td>
+                        </tr>
+                        <tr>
+                            <td>1 milhão a 5 milhões</td>
+                            <td>12</td>
+                            <td>15</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>Acima de 5 milhões</td>
+                            <td>3</td>
+                            <td>5</td>
+                            <td>7</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>TOTAL</td>
+                            <td>200</td>
+                            <td>255</td>
+                            <td>317</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- RESULTADOS MARKETING - Estrutura com etiqueta "ATUAL" corrigida -->
+                <div class="results-container">
+                    <div class="results-badge">ATUAL</div>
+                    <div class="results-header">
+                        Time de Marketing (Orgânico) - Resultados
+                    </div>
+                    <div class="results-content">
+                        <table class="results-actual-table">
+                            <thead>
+                                <tr>
+                                    <th>Até 50k</th>
+                                    <th>50k-101k</th>
+                                    <th>101k-300k</th>
+                                    <th>301k-500k</th>
+                                    <th>501k-1M</th>
+                                    <th>1M-5M</th>
+                                    <th>Acima de 5M</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>127</td>
+                                    <td>60</td>
+                                    <td>50</td>
+                                    <td>34</td>
+                                    <td>23</td>
+                                    <td>30</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="7">Total: 209 orgânico</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <!-- PERFORMANCE - Metas e Resultados -->
+                <div class="meta-card" style="margin-top: 40px;">
+                    <h3>🏆 METAS COLETIVAS - TIME DE PERFORMANCE</h3>
+                    <div class="meta-item">
+                        <span class="meta-emoji">✅</span>
+                        <span class="meta-description">Meta Ideal:</span>
+                        <span class="meta-value">34 MQLs gerados com orçamento de R$ 7.000,00</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-emoji">🔥</span>
+                        <span class="meta-description">Meta Ótima:</span>
+                        <span class="meta-value">42 MQLs gerados</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-emoji">🚀</span>
+                        <span class="meta-description">Meta Excelente:</span>
+                        <span class="meta-value">52 MQLs gerados (desafio máximo!)</span>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 10px; color: var(--azul-escuro);">Distribuição dos Leads por Faixa de Faturamento - Performance</h3>
+                <table class="results-table metas-table">
+                    <thead>
+                        <tr>
+                            <th>Faixa de Faturamento</th>
+                            <th>Meta Ideal</th>
+                            <th>Meta Ótima</th>
+                            <th>Meta Excelente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>51k a 100k</td>
+                            <td>15</td>
+                            <td>18</td>
+                            <td>22</td>
+                        </tr>
+                        <tr>
+                            <td>101k a 300k</td>
+                            <td>9</td>
+                            <td>11</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <td>301k a 500k</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                            <td>501k a 1 milhão</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>1 milhão a 5 milhões</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>3</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>TOTAL</td>
+                            <td>34</td>
+                            <td>42</td>
+                            <td>52</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- RESULTADOS PERFORMANCE - Estrutura com etiqueta "ATUAL" corrigida -->
+                <div class="results-container">
+                    <div class="results-badge">ATUAL</div>
+                    <div class="results-header">
+                        Time de Performance (Tráfego) - Resultados
+                    </div>
+                    <div class="results-content">
+                        <table class="results-actual-table">
+                            <thead>
+                                <tr>
+                                    <th>Até 50k</th>
+                                    <th>50k-101k</th>
+                                    <th>101k-300k</th>
+                                    <th>301k-500k</th>
+                                    <th>501k-1M</th>
+                                    <th>1M-5M</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>132</td>
+                                    <td>50</td>
+                                    <td>29</td>
+                                    <td>13</td>
+                                    <td>14</td>
+                                    <td>16</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="6">Total: 122 de tráfego</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template para os outros meses -->
+            <template id="month-template">
+                <h2 class="section-title">Comissão Time Marketing</h2>
+                <table class="table-marketing">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Valor Total (R$)</th>
+                            <th>1ª Parcela - Dia 15 (R$)</th>
+                            <th>2ª Parcela - Dia 30 (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nayra</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Victor</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Ana Karla</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Gabriel</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Edna</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>TOTAL MARKETING</td>
+                            <td class="team-total">R$ 0,00</td>
+                            <td class="team-total-first">R$ 0,00</td>
+                            <td class="team-total-second">R$ 0,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2 class="section-title">Comissão Time Performance</h2>
+                <table class="table-performance">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Valor Total (R$)</th>
+                            <th>1ª Parcela - Dia 15 (R$)</th>
+                            <th>2ª Parcela - Dia 30 (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cleiton</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Chianca</td>
+                            <td class="val-total" data-value="0.00">R$ 0,00</td>
+                            <td class="val-first" data-value="0.00">R$ 0,00</td>
+                            <td class="val-second" data-value="0.00">R$ 0,00</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>TOTAL PERFORMANCE</td>
+                            <td class="team-total">R$ 0,00</td>
+                            <td class="team-total-first">R$ 0,00</td>
+                            <td class="team-total-second">R$ 0,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table>
+                    <tbody>
+                        <tr class="total-row">
+                            <td style="width: 25%">TOTAL GERAL</td>
+                            <td style="width: 25%" class="grand-total">R$ 0,00</td>
+                            <td style="width: 25%" class="grand-total-first">R$ 0,00</td>
+                            <td style="width: 25%" class="grand-total-second">R$ 0,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
+            
+            <!-- Conteúdos vazios para os outros meses -->
+            <div id="content-janeiro" class="month-content" style="display: none;"></div>
+            <div id="content-fevereiro" class="month-content" style="display: none;"></div>
+            <div id="content-abril" class="month-content" style="display: none;"></div>
+            <div id="content-maio" class="month-content" style="display: none;"></div>
+            <div id="content-junho" class="month-content" style="display: none;"></div>
+            <div id="content-julho" class="month-content" style="display: none;"></div>
+            <div id="content-agosto" class="month-content" style="display: none;"></div>
+            <div id="content-setembro" class="month-content" style="display: none;"></div>
+            <div id="content-outubro" class="month-content" style="display: none;"></div>
+            <div id="content-novembro" class="month-content" style="display: none;"></div>
+            <div id="content-dezembro" class="month-content" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let editMode = false;
+        let currentMonth = 'marco';
+        
+        // Elementos DOM
+        const btnEdit = document.getElementById('btn-edit');
+        const btnSave = document.getElementById('btn-save');
+        const btnCancel = document.getElementById('btn-cancel');
+        const editNotice = document.getElementById('edit-notice');
+        
+        // Inicialização - criar conteúdo para os meses vazios
+        function initializeMonths() {
+            const months = ['janeiro', 'fevereiro', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+            const template = document.getElementById('month-template');
+            
+            months.forEach(month => {
+                const monthContent = document.getElementById(`content-${month}`);
+                
+                if (monthContent) {
+                    // Clonar o template e adicionar ao conteúdo do mês
+                    const content = template.content.cloneNode(true);
+                    monthContent.appendChild(content);
+                }
+            });
+        }
+        
+        // Formatação de moeda
+        function formatCurrency(value) {
+            return `R$ ${parseFloat(value).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+        }
+        
+        function parseCurrency(value) {
+            if (typeof value !== 'string') return 0;
+            return parseFloat(value.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
+        }
+        
+        // Atualizar totais
+        function updateTotals(monthContent) {
+            if (!monthContent) return;
+            
+            try {
+                // Calcular totais do time de marketing
+                let mktTotal = 0;
+                let mktFirst = 0;
+                let mktSecond = 0;
+                
+                monthContent.querySelectorAll('.table-marketing .val-total').forEach(cell => {
+                    mktTotal += parseFloat(cell.getAttribute('data-value') || 0);
+                });
+                
+                monthContent.querySelectorAll('.table-marketing .val-first').forEach(cell => {
+                    mktFirst += parseFloat(cell.getAttribute('data-value') || 0);
+                });
+                
+                monthContent.querySelectorAll('.table-marketing .val-second').forEach(cell => {
+                    mktSecond += parseFloat(cell.getAttribute('data-value') || 0);
+                });
+                
+                // Calcular totais do time de performance
+                let perfTotal = 0;
+                let perfFirst = 0;
+                let perfSecond = 0;
+                
+                monthContent.querySelectorAll('.table-performance .val-total').forEach(cell => {
+                    perfTotal += parseFloat(cell.getAttribute('data-value') || 0);
+                });
+                
+                monthContent.querySelectorAll('.table-performance .val-first').forEach(cell => {
+                    perfFirst += parseFloat(cell.getAttribute('data-value') || 0);
+                });
+                
+                monthContent.querySelectorAll('.table-performance .val-second').forEach(cell => {
+                    perfSecond += parseFloat(cell.getAttribute('data-value') || 0);
+                });
+                
+                // Atualizar totais na tabela - com verificação
+                const mktTotalEl = monthContent.querySelector('.table-marketing .team-total');
+                const mktFirstEl = monthContent.querySelector('.table-marketing .team-total-first');
+                const mktSecondEl = monthContent.querySelector('.table-marketing .team-total-second');
+                
+                if (mktTotalEl) mktTotalEl.textContent = formatCurrency(mktTotal);
+                if (mktFirstEl) mktFirstEl.textContent = formatCurrency(mktFirst);
+                if (mktSecondEl) mktSecondEl.textContent = formatCurrency(mktSecond);
+                
+                const perfTotalEl = monthContent.querySelector('.table-performance .team-total');
+                const perfFirstEl = monthContent.querySelector('.table-performance .team-total-first');
+                const perfSecondEl = monthContent.querySelector('.table-performance .team-total-second');
+                
+                if (perfTotalEl) perfTotalEl.textContent = formatCurrency(perfTotal);
+                if (perfFirstEl) perfFirstEl.textContent = formatCurrency(perfFirst);
+                if (perfSecondEl) perfSecondEl.textContent = formatCurrency(perfSecond);
+                
+                // Atualizar total geral
+                const grandTotalEl = monthContent.querySelector('.grand-total');
+                const grandFirstEl = monthContent.querySelector('.grand-total-first');
+                const grandSecondEl = monthContent.querySelector('.grand-total-second');
+                
+                if (grandTotalEl) grandTotalEl.textContent = formatCurrency(mktTotal + perfTotal);
+                if (grandFirstEl) grandFirstEl.textContent = formatCurrency(mktFirst + perfFirst);
+                if (grandSecondEl) grandSecondEl.textContent = formatCurrency(mktSecond + perfSecond);
+            } catch (error) {
+                console.error("Erro ao atualizar totais:", error);
+            }
+        }
+        
+        // Alternância entre meses
+        function setupMonthPills() {
+            document.querySelectorAll('.month-pill').forEach(pill => {
+                pill.addEventListener('click', function() {
+                    // Atualiza a classe ativa nos botões
+                    document.querySelectorAll('.month-pill').forEach(p => {
+                        p.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Guarda o mês atual
+                    currentMonth = this.getAttribute('data-month');
+                    
+                    // Atualiza o título do mês
+                    const monthName = this.textContent;
+                    const monthNameEl = document.querySelector('.month-name');
+                    if (monthNameEl) {
+                        monthNameEl.textContent = `Comissões de ${monthName}/2025`;
+                    }
+                    
+                    // Esconde todos os conteúdos e mostra o correto
+                    document.querySelectorAll('.month-content').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    
+                    const contentId = `content-${currentMonth}`;
+                    const currentContent = document.getElementById(contentId);
+                    if (currentContent) {
+                        currentContent.style.display = 'block';
+                    }
+                });
+            });
+        }
+        
+        // Botão editar - Ativa o modo de edição
+        function setupEditButton() {
+            if (!btnEdit) return;
+            
+            btnEdit.addEventListener('click', function() {
+                editMode = true;
+                
+                // Mostra aviso e botões de salvar/cancelar
+                if (editNotice) editNotice.style.display = 'block';
+                if (btnSave) btnSave.style.display = 'inline-block';
+                if (btnCancel) btnCancel.style.display = 'inline-block';
+                btnEdit.style.display = 'none';
+                
+                // Torna todas as células editáveis em todas as abas
+                document.querySelectorAll('.month-content').forEach(monthContent => {
+                    if (!monthContent) return;
+                    
+                    monthContent.querySelectorAll('.val-total, .val-first, .val-second').forEach(cell => {
+                        if (!cell) return;
+                        
+                        const value = cell.getAttribute('data-value') || '0.00';
+                        cell.innerHTML = `<input type="text" value="${parseFloat(value).toFixed(2).replace('.', ',')}" class="edit-input" data-original="${value}">`;
+                    });
+                });
+                
+                // Adicionar eventos para cálculo automático
+                document.querySelectorAll('.edit-input').forEach(input => {
+                    if (!input) return;
+                    
+                    input.addEventListener('change', function() {
+                        const cell = this.parentElement;
+                        if (!cell) return;
+                        
+                        const newValue = this.value.replace(',', '.');
+                        
+                        // Atualiza o valor do atributo data
+                        cell.setAttribute('data-value', newValue);
+                        
+                        // Se for uma célula de valor total, atualiza as parcelas 1 e 2
+                        if (cell.classList.contains('val-total')) {
+                            const row = cell.parentElement;
+                            if (!row) return;
+                            
+                            const firstCell = row.querySelector('.val-first');
+                            const secondCell = row.querySelector('.val-second');
+                            
+                            if (firstCell && secondCell) {
+                                // Divide o valor total em duas parcelas iguais
+                                const halfValue = parseFloat(newValue) / 2;
+                                
+                                // Atualiza as células de parcelas
+                                firstCell.setAttribute('data-value', halfValue.toFixed(2));
+                                secondCell.setAttribute('data-value', halfValue.toFixed(2));
+                                
+                                // Atualiza os inputs nas células
+                                const firstInput = firstCell.querySelector('input');
+                                const secondInput = secondCell.querySelector('input');
+                                
+                                if (firstInput) firstInput.value = halfValue.toFixed(2).replace('.', ',');
+                                if (secondInput) secondInput.value = halfValue.toFixed(2).replace('.', ',');
+                            }
+                        }
+                        
+                        // Atualiza totais do mês atual
+                        const currentMonthContent = document.getElementById(`content-${currentMonth}`);
+                        if (currentMonthContent) {
+                            updateTotals(currentMonthContent);
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Botão salvar - Salva as alterações
+        function setupSaveButton() {
+            if (!btnSave) return;
+            
+            btnSave.addEventListener('click', function() {
+                editMode = false;
+                
+                // Esconde aviso e botões
+                if (editNotice) editNotice.style.display = 'none';
+                if (btnSave) btnSave.style.display = 'none';
+                if (btnCancel) btnCancel.style.display = 'none';
+                if (btnEdit) btnEdit.style.display = 'inline-block';
+                
+                // Salva os valores editados para todas as abas
+                document.querySelectorAll('.month-content').forEach(monthContent => {
+                    if (!monthContent) return;
+                    
+                    monthContent.querySelectorAll('.val-total, .val-first, .val-second').forEach(cell => {
+                        if (!cell) return;
+                        
+                        const input = cell.querySelector('input');
+                        if (input) {
+                            const newValue = input.value.replace(',', '.');
+                            cell.setAttribute('data-value', newValue);
+                            cell.textContent = formatCurrency(newValue);
+                        }
+                    });
+                    
+                    // Atualiza os totais
+                    updateTotals(monthContent);
+                });
+                
+                alert('Alterações salvas com sucesso!');
+            });
+        }
+        
+        // Botão cancelar - Cancela as alterações
+        function setupCancelButton() {
+            if (!btnCancel) return;
+            
+            btnCancel.addEventListener('click', function() {
+                editMode = false;
+                
+                // Esconde aviso e botões
+                if (editNotice) editNotice.style.display = 'none';
+                if (btnSave) btnSave.style.display = 'none';
+                btnCancel.style.display = 'none';
+                if (btnEdit) btnEdit.style.display = 'inline-block';
+                
+                // Reverte para os valores originais
+                document.querySelectorAll('.month-content').forEach(monthContent => {
+                    if (!monthContent) return;
+                    
+                    monthContent.querySelectorAll('.val-total, .val-first, .val-second').forEach(cell => {
+                        if (!cell) return;
+                        
+                        const input = cell.querySelector('input');
+                        if (input) {
+                            const originalValue = input.getAttribute('data-original') || '0.00';
+                            cell.textContent = formatCurrency(originalValue);
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar conteúdo dos meses
+            initializeMonths();
+            
+            // Configurar navegação entre meses
+            setupMonthPills();
+            
+            // Configurar botões de edição
+            setupEditButton();
+            setupSaveButton();
+            setupCancelButton();
+            
+            // Inicializa os totais para todos os meses
+            document.querySelectorAll('.month-content').forEach(monthContent => {
+                if (monthContent) {
+                    updateTotals(monthContent);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
